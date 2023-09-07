@@ -1,0 +1,17 @@
+#hero{
+    padding: 6vh 9vw;
+}
+
+#bars{
+    border-radius: 8px;
+    background-color: #662852;
+    padding: 10px;
+}
+
+.buttn{
+    width: 200px;
+    height: 35px;
+    background-color: #fcc4dc;
+    color: #321C35;
+    border-radius: 5px;
+}

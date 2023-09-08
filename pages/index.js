@@ -23,11 +23,11 @@ export async function getServerSideProps(context){
 export default function Home( {pokemonData} ) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { colorMode, toggleColorMode } = useColorMode();
-  const textColor = useColorModeValue("#f8f8f8", "#111111");
-  const bodyBgColor = useColorModeValue("#575757", "#bdde7b");
-  const modalBgColor = useColorModeValue("#2b2b2b", "#739c39");
-  const compColor = useColorModeValue("#3b3b3b", "#b4de73");
-  const buttonColor = useColorModeValue("#bcbcbc", "#188f31");
+  const textColor = useColorModeValue("#111111", "#f8f8f8");
+  const bodyBgColor = useColorModeValue("#bdde7b", "#575757");
+  const modalBgColor = useColorModeValue("#739c39", "#2b2b2b");
+  const compColor = useColorModeValue("#b4de73", "#3b3b3b");
+  const buttonColor = useColorModeValue("#188f31", "#bcbcbc");
   const toast = useToast()
 
   const [moves, setMoves] = useState([])
@@ -110,7 +110,7 @@ export default function Home( {pokemonData} ) {
       </Head>
       
       <Box bgColor={bodyBgColor} h={"100vh"} overflowY={'scroll'} pb={20} pos={"relative"}>
-        <IconButton pos={"absolute"} top={10} right={10} bgColor={buttonColor} onClick={toggleColorMode} aria-label='Change Color Scheme' icon={colorMode === "light" ? <SunIcon /> : <MoonIcon />} />
+        <IconButton pos={"absolute"} top={10} right={10} bgColor={buttonColor} onClick={toggleColorMode} aria-label='Change Color Scheme' icon={colorMode === "light" ?  <MoonIcon />: <SunIcon />} />
         <Center mt={20} textAlign={"center"}>
           <VStack>
             <Text fontSize={50} fontWeight={"bold"} color={textColor}>Search for a pokemon!</Text>
@@ -122,7 +122,7 @@ export default function Home( {pokemonData} ) {
                 backgroundColor={"white"} borderColor={"black"} borderWidth={4} color={"black"} focusBorderColor='black' placeholder="Search for a Pokemon by their name" 
               />
               <InputRightElement width='4.5rem' mr={2}>
-                <Button h='1.75rem' size='sm' onClick={searchPokemon} colorScheme='green' color={textColor}>Search</Button>
+                <Button h='1.75rem' size='sm' onClick={searchPokemon} colorScheme='green' color={"black"}>Search</Button>
               </InputRightElement>
             </InputGroup>
           </VStack>
@@ -146,10 +146,10 @@ export default function Home( {pokemonData} ) {
         </SimpleGrid>
 
         <Center py={5}>
-          <Button color={colorMode==="light"?"black":"white"} bgColor={buttonColor} onClick={loadMore}>Load More!</Button>
+          <Button color={colorMode==="light"?"white": "black"} bgColor={buttonColor} onClick={loadMore}>Load More!</Button>
         </Center>
         <Box>
-          <Text fontSize={30} position={'absolute'} right={20} color={textColor}>Made by <Link href="https://www.itsmichael.dev/" target="_blank" color={colorMode==="light"?"red.400":"teal.500"}>Michael.</Link></Text>
+          <Text fontSize={30} position={'absolute'} right={20} color={textColor}>Made by <Link href="https://www.itsmichael.dev/" target="_blank" color={colorMode==="light"?"teal.500": "red.400"}>Michael.</Link></Text>
         </Box>
       </Box>
       
@@ -188,7 +188,7 @@ export default function Home( {pokemonData} ) {
           </ModalBody>
 
           <ModalFooter>
-            <Button bgColor={buttonColor} color={colorMode==="light"?"black":"white"} mr={3} onClick={onClose}>
+            <Button bgColor={buttonColor} color={colorMode==="light"?"white":"black"} mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

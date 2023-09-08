@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useState } from "react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton} from '@chakra-ui/react'
-import { Box, useDisclosure, useColorMode, Link, useToast, IconButton, InputGroup, InputRightElement, useColorModeValue, Tag, Input, Text, SimpleGrid, Button, Center, Img, VStack } from '@chakra-ui/react';
+import { Box, useDisclosure, useColorMode, Link, useToast, IconButton, useColorModeValue, Tag, Input, Text, SimpleGrid, Button, Center, Img, VStack } from '@chakra-ui/react';
 
 //Retrieves the initial 1010 pokemon from PokeApi in the server side before the page content is loaded.
 export async function getServerSideProps(context){
@@ -18,6 +18,18 @@ export async function getServerSideProps(context){
       pokemonData: pokemonData.results, //pokemon list
     }
   }
+}
+
+function PokemonDiv( {modalBgColor, index, textColor, item}){
+  return(
+    <Box _hover={{cursor: "pointer"}} pos={"relative"} p={5} textAlign="center" key={index} onClick={() => populateInfo(item.name)} border={`2px dashed ${modalBgColor}`} borderRadius={5}>
+      <Center>
+        <Img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`}/>
+      </Center>
+      <Text fontSize={"16px"} color={textColor}>{item.name.toUpperCase()}</Text>
+      <Text color={textColor} pos={"absolute"} fontSize={"2ch"} top={2} left={3}>{index+1}.</Text>
+    </Box>
+  )
 }
 
 export default function Home( {pokemonData} ) {
@@ -115,39 +127,29 @@ export default function Home( {pokemonData} ) {
           <VStack>
             <Text fontSize={50} fontWeight={"bold"} color={textColor}>Search for a pokemon!</Text>
             
-            <InputGroup size='md' maxW={"80%"}>
               <Input
                 value={searchText} onChange={(e)=>setSearch(e.target.value)}
                 type={'text'}
                 backgroundColor={"white"} borderColor={"black"} borderWidth={4} color={"black"} focusBorderColor='black' placeholder="Search for a Pokemon by their name" 
               />
-              <InputRightElement width='4.5rem' mr={2}>
-                <Button h='1.75rem' size='sm' onClick={searchPokemon} colorScheme='green' color={"black"}>Search</Button>
-              </InputRightElement>
-            </InputGroup>
           </VStack>
         </Center>
 
         {/* Displays basic info for each Pokemon: A picture, the name, and number */}
         <SimpleGrid minChildWidth='130px' spacing='33px' px={"10%"} my={"3%"}>
-  
-          {pokemonData && pokemonData.slice(0, count).map((item, index) => (
-  
-              <Box _hover={{cursor: "pointer"}} pos={"relative"} p={5} textAlign="center" key={index} onClick={() => populateInfo(item.name)} border={`2px dashed ${modalBgColor}`} borderRadius={5}>
-                <Center>
-                  <Img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`}/>
-                </Center>
-                <Text fontSize={"16px"} color={textColor}>{item.name.toUpperCase()}</Text>
-                <Text color={textColor} pos={"absolute"} fontSize={"2ch"} top={2} left={3}>{index+1}.</Text>
-           </Box>
-              
-            )
-          )}
+          {searchText ? (pokemonData.map((item, index) => (
+            (item.name.includes(searchText) && 
+            <PokemonDiv modalBgColor={modalBgColor} index={index} textColor={textColor} item={item}/> 
+            )))) : (pokemonData && pokemonData.slice(0, count).map((item, index) => (
+          <PokemonDiv modalBgColor={modalBgColor} index={index} textColor={textColor} item={item}/> 
+        )))}
+
         </SimpleGrid>
 
+        {!searchText &&
         <Center py={5}>
-          <Button color={colorMode==="light"?"white": "black"} bgColor={buttonColor} onClick={loadMore}>Load More!</Button>
-        </Center>
+          <Button color={colorMode==="light"?"white": "black"} bgColor={buttonColor} onClick={loadMore}>Explore More!</Button>
+        </Center>}
         <Box>
           <Text fontSize={30} position={'absolute'} right={20} color={textColor}>Made by <Link href="https://www.itsmichael.dev/" target="_blank" color={colorMode==="light"?"teal.500": "red.400"}>Michael.</Link></Text>
         </Box>

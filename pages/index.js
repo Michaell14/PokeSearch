@@ -109,7 +109,7 @@ export default function Home( {pokemonData} ) {
         {/* Displays basic info for each Pokemon: A picture, the name, and number */}
         <SimpleGrid minChildWidth='130px' spacing='33px' px={"10%"} my={"3%"}>
           {searchText ? (pokemonData.map((item, index) => (
-            (item.name.includes(searchText) && 
+            (item.name.includes(searchText.toLowerCase()) && 
             <PokemonDiv populateInfo={populateInfo} modalBgColor={modalBgColor} key={index} index={index} textColor={textColor} item={item}/> 
             )))) : (pokemonData && pokemonData.slice(0, count).map((item, index) => (
           <PokemonDiv populateInfo={populateInfo} modalBgColor={modalBgColor} key={index} index={index} textColor={textColor} item={item}/> 

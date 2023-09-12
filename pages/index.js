@@ -41,18 +41,29 @@ export default function Home( {pokemonData} ) {
   const compColor = useColorModeValue("#b4de73", "#3b3b3b");
   const buttonColor = useColorModeValue("#188f31", "#bcbcbc");
 
-  const [moves, setMoves] = useState([])
+  const [pokeInfo, setPokeInfo] = useState({
+    "moves": [],
+    "types": [],
+    "name": "",
+    "weight": "",
+    "height": "",
+    "id": ""
+  })
+
   const [count, setCount] = useState(50)
-  const [name, setName] = useState("");
-  const [types, setTypes] = useState([])
-  const [weight, setWeight] = useState("")
-  const [height, setHeight] = useState("")
-  const [number, setNumber] = useState("")  
   const [searchText, setSearch] = useState("")
 
   //Populates the Modal with the pokemon info whenever a new pokemon is selected
   async function populateInfo(pokeName){
-
+    setPokeInfo({
+      "moves": [],
+      "types": [],
+      "name": "",
+      "weight": "",
+      "height": "",
+      "id": ""
+    })
+    onOpen();
     //Retrieves the data for a specific pokemon such as its weight, height, and attack info
     await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`).then(res => res.json()).then(data => {
       
@@ -69,14 +80,15 @@ export default function Home( {pokemonData} ) {
         pokeMoves.push(data.moves[i].move.name.replace("-", " ").toUpperCase())
       }
 
-      //Setting the modal data
-      setMoves(pokeMoves);
-      setTypes(pokeTypes);
-      setName(pokeName);
-      setWeight(data.weight);
-      setHeight(data.height);
-      setNumber(data.id);
-      onOpen();
+      //Setting modal data
+      setPokeInfo({
+        "moves": pokeMoves,
+        "types": pokeTypes,
+        "name": pokeName,
+        "weight": data.weight,
+        "height": data.height,
+        "id": data.id 
+      })
     })
   }
 
@@ -130,20 +142,20 @@ export default function Home( {pokemonData} ) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bgColor={modalBgColor}>
-          <ModalHeader color={textColor}>{number}. {name.toUpperCase()}
-                {types.map((item, index) => (
+          <ModalHeader color={textColor}>{pokeInfo["id"]}. {pokeInfo["name"].toUpperCase()}
+                {pokeInfo["types"].map((item, index) => (
                   <Tag bgColor={compColor} color={textColor} mt={1} key={index} ml={2}>{item}</Tag>
                 ))}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Center mt={"-22px"}>
-              <Img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png`}/>
+              <Img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeInfo["id"]}.png`}/>
             </Center>
 
             <Center>
-              <Text color={textColor}>Weight: {weight}lbs.</Text>
-              <Text color={textColor} ml={5}>Height: {height}ft.</Text>
+              <Text color={textColor}>Weight: {pokeInfo["weight"]}lbs.</Text>
+              <Text color={textColor} ml={5}>Height: {pokeInfo["height"]}ft.</Text>
             </Center>
             
             <Center mt={5} mb={2}>
@@ -151,7 +163,7 @@ export default function Home( {pokemonData} ) {
             </Center>
 
             <SimpleGrid columns={2} spacing={6}>
-              {moves.map((item, index) => (
+              {pokeInfo["moves"].map((item, index) => (
                 <Box key={index} textAlign={"center"} bgColor={compColor} borderRadius={10} padding={5}>
                   <Text color={textColor}>{item}</Text>
                 </Box>

@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { useState } from "react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton} from '@chakra-ui/react'
-import { Box, useDisclosure, useColorMode, Link, IconButton, useColorModeValue, Tag, Input, Text, SimpleGrid, Button, Center, Img, VStack } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Skeleton} from '@chakra-ui/react'
+import { Box, useDisclosure, SkeletonCircle, useColorMode, Link, IconButton, useColorModeValue, Tag, Input, Text, SimpleGrid, Button, Center, Img, VStack } from '@chakra-ui/react';
 
 //Retrieves the initial 1010 pokemon from PokeApi in the server side before the page content is loaded.
 export async function getServerSideProps(context){
@@ -51,6 +51,7 @@ export default function Home( {pokemonData} ) {
   })
 
   const [count, setCount] = useState(50)
+  const [loading, setLoading] = useState(false)
   const [searchText, setSearch] = useState("")
 
   //Populates the Modal with the pokemon info whenever a new pokemon is selected
@@ -63,6 +64,7 @@ export default function Home( {pokemonData} ) {
       "height": "",
       "id": ""
     })
+    setLoading(false);
     onOpen();
     //Retrieves the data for a specific pokemon such as its weight, height, and attack info
     await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`).then(res => res.json()).then(data => {
@@ -89,6 +91,7 @@ export default function Home( {pokemonData} ) {
         "height": data.height,
         "id": data.id 
       })
+      setLoading(true);
     })
   }
 
@@ -142,33 +145,37 @@ export default function Home( {pokemonData} ) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bgColor={modalBgColor}>
-          <ModalHeader color={textColor}>{pokeInfo["id"]}. {pokeInfo["name"].toUpperCase()}
+          <ModalHeader color={textColor}><Skeleton isLoaded={loading}>{pokeInfo["id"]}. {pokeInfo["name"].toUpperCase()}
                 {pokeInfo["types"].map((item, index) => (
                   <Tag bgColor={compColor} color={textColor} mt={1} key={index} ml={2}>{item}</Tag>
-                ))}
+                ))}</Skeleton>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Center mt={"-22px"}>
-              <Img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeInfo["id"]}.png`}/>
-            </Center>
-
-            <Center>
-              <Text color={textColor}>Weight: {pokeInfo["weight"]}lbs.</Text>
-              <Text color={textColor} ml={5}>Height: {pokeInfo["height"]}ft.</Text>
-            </Center>
+          
+              <Center mt={"-22px"}>
+                
+                {!loading ? <SkeletonCircle isLoaded={loading} size={20}/> : 
+                
+                <Img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokeInfo["id"]}.png`}/>
+}
+              </Center>
             
+            <Skeleton isLoaded={loading}>
+              <Center> 
+                <Text color={textColor}>Weight: {pokeInfo["weight"]}lbs.</Text>
+                <Text color={textColor} ml={5}>Height: {pokeInfo["height"]}ft.</Text>  
+              </Center>
+            </Skeleton>
             <Center mt={5} mb={2}>
               <Text fontSize={"2xl"} color={textColor}>Possible Moveset:</Text>
             </Center>
-
             <SimpleGrid columns={2} spacing={6}>
               {pokeInfo["moves"].map((item, index) => (
                 <Box key={index} textAlign={"center"} bgColor={compColor} borderRadius={10} padding={5}>
                   <Text color={textColor}>{item}</Text>
                 </Box>
-                
-              ))}
+                ))}
             </SimpleGrid>
           </ModalBody>
 

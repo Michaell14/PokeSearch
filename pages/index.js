@@ -3,7 +3,7 @@ import { useState } from "react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Skeleton} from '@chakra-ui/react'
 import { Box, useDisclosure, SkeletonCircle, useColorMode, Link, IconButton, useColorModeValue, Tag, Input, Text, SimpleGrid, Button, Center, Img, VStack } from '@chakra-ui/react';
-import { typeColors } from '../components/typeColors';
+import { typeColors } from '../lib/typeColors';
 
 //Retrieves the initial 1010 pokemon from PokeApi in the server side before the page content is loaded.
 export async function getServerSideProps(context){

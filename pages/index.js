@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Skeleton} from '@chakra-ui/react'
 import { Box, useDisclosure, SkeletonCircle, useColorMode, Link, IconButton, useColorModeValue, Tag, Input, Text, SimpleGrid, Button, Center, Img, VStack } from '@chakra-ui/react';
+import { typeColors } from './typeColors';
 
 //Retrieves the initial 1010 pokemon from PokeApi in the server side before the page content is loaded.
 export async function getServerSideProps(context){
@@ -147,7 +148,7 @@ export default function Home( {pokemonData} ) {
         <ModalContent bgColor={modalBgColor}>
           <ModalHeader color={textColor}><Skeleton isLoaded={loading}>{pokeInfo["id"]}. {pokeInfo["name"].toUpperCase()}
                 {pokeInfo["types"].map((item, index) => (
-                  <Tag bgColor={compColor} color={textColor} mt={1} key={index} ml={2}>{item}</Tag>
+                  <Tag bgColor={typeColors[item]} color={textColor} mt={1} key={index} ml={2}>{item}</Tag>
                 ))}</Skeleton>
           </ModalHeader>
           <ModalCloseButton />
